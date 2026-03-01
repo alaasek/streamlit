@@ -264,6 +264,7 @@ if run_pso_btn:
     st.write("**Best Individual (Final):**", gbest)
     st.write(f"**Iterations without improvement:** {stagnation_count}")
 
+
     # Courbe de convergence
     st.subheader("📈 Courbe de convergence")
     fig1, ax1 = plt.subplots()
@@ -274,16 +275,44 @@ if run_pso_btn:
     ax1.legend()
     st.pyplot(fig1)
 
+    # Scatter plot: Initial vs Final Population
+    if D >= 2:
+        st.subheader("📊 Search History: 1st Iteration vs Final Iteration")
+        fig2, (ax2a, ax2b) = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # 1st iteration (initial population)
+        ax2a.scatter(initial_pop[:, 0], initial_pop[:, 1], color='red', alpha=0.6, s=50)
+        ax2a.scatter(initial_pop[init_best_idx, 0], initial_pop[init_best_idx, 1], 
+                     color='blue', s=200, marker='*', label="Best", edgecolors='black', linewidth=2)
+        ax2a.set_xlabel("X1")
+        ax2a.set_ylabel("X2")
+        ax2a.set_title("1st Iteration (Initial Population)")
+        ax2a.legend()
+        ax2a.grid(True, alpha=0.3)
+        
+        # Final iteration
+        ax2b.scatter(final_pop[:, 0], final_pop[:, 1], color='green', alpha=0.6, s=50)
+        ax2b.scatter(gbest[0], gbest[1], color='blue', s=200, marker='*', 
+                     label="Best", edgecolors='black', linewidth=2)
+        ax2b.set_xlabel("X1")
+        ax2b.set_ylabel("X2")
+        ax2b.set_title(f"Final Iteration ({len(history)-1})")
+        ax2b.legend()
+        ax2b.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        st.pyplot(fig2)
 
     # Trajectoire de la première particule
     if D >= 2:
         st.subheader("🌀 Trajectoire de la première particule")
-        fig2, ax2 = plt.subplots()
-        ax2.plot(traj[:,0], traj[:,1], marker='o')
-        ax2.set_xlabel("X1")
-        ax2.set_ylabel("X2")
-        ax2.set_title("Trajectory of Particle 0")
-        st.pyplot(fig2)
+        fig3, ax3 = plt.subplots()
+        ax3.plot(traj[:,0], traj[:,1], marker='o')
+        ax3.set_xlabel("X1")
+        ax3.set_ylabel("X2")
+        ax3.set_title("Trajectory of Particle 0")
+        st.pyplot(fig3)
+
 
     # Comparaison population initiale vs finale
     if population is not None and D >= 2:
