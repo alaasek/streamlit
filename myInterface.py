@@ -221,7 +221,6 @@ def PSO(func, N=30, D=2, T=200, w=0.3, c1=1.4, c2=1.4):
     return gbest, gbest_val, history, np.array(trajectories), X
 
 # ---------------- RUN PSO ----------------
-run_pso_btn = st.sidebar.button("🚀 Run PSO Optimization")
 
 if run_pso_btn:
     f = functions[function_name]
