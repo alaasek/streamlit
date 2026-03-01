@@ -228,6 +228,7 @@ if run_pso_btn:
 
     st.subheader("🏆 Résultats PSO")
     st.metric("Best Fitness (gbest)", round(float(gbest_val), 6))
+    st.metric("Stagnation", len(history) - np.argmin(history))  # itérations depuis le meilleur
 
     # Courbe de convergence
     st.subheader("📈 Courbe de convergence")
