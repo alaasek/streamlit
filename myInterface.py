@@ -233,6 +233,8 @@ def PSO(func, N=30, D=2, T=200, w=0.3, c1=1.4, c2=1.4):
 
 # ---------------- RUN PSO ----------------
 
+# ...existing code...
+
 if run_pso_btn:
     f = functions[function_name]
     gbest, gbest_val, history, traj, final_pop, initial_pop, init_best_val, init_worst_val, init_best_idx, init_worst_idx = PSO(f, N, D, T=200)
@@ -249,9 +251,18 @@ if run_pso_btn:
     st.write("**Best Individual (Initial):**", initial_pop[init_best_idx])
     st.write("**Worst Individual (Initial):**", initial_pop[init_worst_idx])
     
+    # Display final population stats
+    st.subheader("⭐ Final Population Stats")
+    stagnation_iteration = np.argmin(history)
+    stagnation_count = len(history) - stagnation_iteration
+    
     col3, col4 = st.columns(2)
     col3.metric("Best Fitness (gbest) - Final", round(float(gbest_val), 6))
-    col4.metric("Stagnation", len(history) - np.argmin(history))  # itérations depuis le meilleur
+    col4.metric("Stagnation Iteration", int(stagnation_iteration))
+    
+    # Display best individual from final population
+    st.write("**Best Individual (Final):**", gbest)
+    st.write(f"**Iterations without improvement:** {stagnation_count}")
 
     # Courbe de convergence
     st.subheader("📈 Courbe de convergence")
@@ -262,6 +273,7 @@ if run_pso_btn:
     ax1.set_title("Convergence Curve")
     ax1.legend()
     st.pyplot(fig1)
+
 
     # Trajectoire de la première particule
     if D >= 2:
