@@ -197,6 +197,13 @@ def PSO(func, N=30, D=2, T=200, w=0.3, c1=1.4, c2=1.4):
     pbest_val = np.array([func(x) for x in X])
     gbest = X[np.argmin(pbest_val)]
     gbest_val = np.min(pbest_val)
+    
+    # Store initial population stats
+    initial_pop = X.copy()
+    initial_best_idx = np.argmin(pbest_val)
+    initial_worst_idx = np.argmax(pbest_val)
+    initial_best_val = pbest_val[initial_best_idx]
+    initial_worst_val = pbest_val[initial_worst_idx]
 
     history = [gbest_val]
     trajectories = [X[0].copy()]  # suivre particule 0
@@ -218,17 +225,33 @@ def PSO(func, N=30, D=2, T=200, w=0.3, c1=1.4, c2=1.4):
         history.append(gbest_val)
         trajectories.append(X[0].copy())
 
-    return gbest, gbest_val, history, np.array(trajectories), X
+    return gbest, gbest_val, history, np.array(trajectories), X, initial_pop, initial_best_val, initial_worst_val, initial_best_idx, initial_worst_idx
+
+
+
+# ---------------- RUN PSO ----------------
 
 # ---------------- RUN PSO ----------------
 
 if run_pso_btn:
     f = functions[function_name]
-    gbest, gbest_val, history, traj, final_pop = PSO(f, N, D, T=200)
+    gbest, gbest_val, history, traj, final_pop, initial_pop, init_best_val, init_worst_val, init_best_idx, init_worst_idx = PSO(f, N, D, T=200)
 
     st.subheader("🏆 Résultats PSO")
-    st.metric("Best Fitness (gbest)", round(float(gbest_val), 6))
-    st.metric("Stagnation", len(history) - np.argmin(history))  # itérations depuis le meilleur
+    
+    # Display initial population stats
+    st.subheader("🔍 Initial Population Stats")
+    col1, col2 = st.columns(2)
+    col1.metric("Initial Best Fitness", round(float(init_best_val), 6))
+    col2.metric("Initial Worst Fitness", round(float(init_worst_val), 6))
+    
+    # Display best and worst individuals from initial population
+    st.write("**Best Individual (Initial):**", initial_pop[init_best_idx])
+    st.write("**Worst Individual (Initial):**", initial_pop[init_worst_idx])
+    
+    col3, col4 = st.columns(2)
+    col3.metric("Best Fitness (gbest) - Final", round(float(gbest_val), 6))
+    col4.metric("Stagnation", len(history) - np.argmin(history))  # itérations depuis le meilleur
 
     # Courbe de convergence
     st.subheader("📈 Courbe de convergence")
